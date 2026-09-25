@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Form View -->
+    <record id="real_state_form_view" model="ir.ui.view">
+        <field name="name">real.state.form</field>
+        <field name="model">real.state</field>
+        <field name="arch" type="xml">
+            <form string="Real State">
+                <header>
+                    <button name="action_draft" string="Mark as Draft" type="object" class="btn-success" invisible="state == 'draft'"/>
+                    <button name="action_available" string="Mark as Available" type="object" class="btn-warning" invisible="state != 'draft'"/>
+                    <button name="action_done" string="Mark as Done" type="object" class="btn-primary" invisible="state != 'available'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                <div class="oe_title">
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        <field name="refrence" readonly="1"/>
+                    </h1>
+                </div>
+                    <group>
+                        <group>
+                            <field name="name" required="1" placeholder="Property Name"/>
+                            <field name="description"/>
+                            <field name="price"/>
+                            <field name="tax"/>
+                            <field name="tax_total"/>
+                            <field name="location"/>
+                            <field name="available" widget="boolean_toggle"/>
+                            <field name="availability_status"/>
+                            <field name="state"/>
+                        </group>
+                        <group>
+                            <field name="sale_date"/>
+                            <field name="create_date"/>
+                            <field name="binary_image" widget="image"/>
+                            <field name="property_details"/>
+                            <field name="property_type"/>
+                            <field name="field_order"/>
+                            <field name="field_orders" widget="many2many_tags"/>
+                            <field name="user_id"/>
+                            <field name="partner_id"/>
+                            <field name="partner_phone"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Real State Lines">
+                            <field name="line_ids">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="price"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="real_state_list" model="ir.ui.view">
+    <field name="name">real.state.list</field>
+    <field name="model">real.state</field>
+    <field name="arch" type="xml">
+        <list string="Real State">   
+            <field name="name"/>
+            <field name="price"/>
+            <field name="location"/>
+            <field name="property_type"/>
+            <field name="available"/>
+            <field name="state"/>
+        </list>
+    </field>
+</record>
+
+    <!-- Search View -->
+    <record id="real_state_search_view" model="ir.ui.view">
+        <field name="name">real.state.search.view</field>
+        <field name="model">real.state</field>
+        <field name="arch" type="xml">
+            <search string="Search Real State">
+                <field name="name"/>
+                <field name="price"/>
+                <field name="location"/>
+                <filter name="available_filter" string="Available" domain="[('available', '=', True)]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_available" string="Available" context="{'group_by':'available'}"/>
+                    <filter name="group_by_type" string="Property Type" context="{'group_by':'property_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="real_state_action" model="ir.actions.act_window">
+        <field name="name">Real State Properties</field>
+        <field name="res_model">real.state</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="real_state_search_view"/>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="real_state_menu" name="Real State" action="real_state_action" sequence="10"/>
+
+</odoo>

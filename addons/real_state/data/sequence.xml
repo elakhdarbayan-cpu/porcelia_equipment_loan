@@ -1,0 +1,11 @@
+<odoo>
+    <data>
+        <record id="real_state_sequence" model="ir.sequence">
+            <field name="name">Real State Sequence</field>
+            <field name="code">real.state</field>
+            <field name="prefix">RS</field>
+            <field name="padding">4</field> 
+            
+        </record>
+    </data>
+</odoo>

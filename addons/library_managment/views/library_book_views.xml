@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Form View -->
+    <record id="library_book_form_view" model="ir.ui.view">
+        <field name="name">library.book.form</field>
+        <field name="model">library.book</field>
+        <field name="arch" type="xml">
+            <form string="Library Book">
+                <header>
+                    <button name="action_draft" string="Draft" type="object" class="btn-secondary" invisible="state == 'draft'"/>
+                    <button name="action_available" string="Available" type="object" class="btn-success" invisible="state != 'draft'"/>
+                    <button name="action_borrowed" string="Borrow" type="object" class="btn-primary" invisible="state != 'available'"/>
+                    <button name="action_lost" string="Lost" type="object" class="btn-danger" invisible="state != 'borrowed'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="reference" readonly="1"/>
+                            <field name="name"/>
+                            <field name="price"/>
+                            <field name="quantity"/>
+                            <field name="total_amount" readonly="1"/>
+                            <field name="state"/>
+                        </group>
+                        <group>
+                            <field name="publish_date"/>
+                            <field name="expiry_date" invisible="state != 'available'"/>
+                            <field name="is_expired" readonly="1"/>
+                            <field name="is_active"/>
+                            <field name="user_id"/>
+                            <field name="partner_id" invisible="state == 'draft'"/>       
+                            <field name="partner_phone" invisible="state == 'draft'"/>
+                         
+                        </group>
+                    </group>
+                    <group>
+                        <field name="description"/>
+                    </group>
+                    <notebook>
+                        <page string="Chapters">
+                            <field name="line_ids">
+                                <list editable="bottom">
+                                    <field name="chapter_name"/>
+                                    <field name="pages"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- list View -->
+    <record id="library_book_list_view" model="ir.ui.view">
+        <field name="name">library.book.list</field>
+        <field name="model">library.book</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="reference"/>
+                <field name="name"/>
+                <field name="price"/>
+                <field name="quantity"/>
+                <field name="total_amount"/>
+                <field name="state"/>
+                <field name="is_expired"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="library_book_action" model="ir.actions.act_window">
+        <field name="name">Library Books</field>
+        <field name="res_model">library.book</field>
+        <field name="view_mode">list,form</field>   
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="library_menu" name="Library Management" action="library_book_action" sequence="10"/>
+
+</odoo>
