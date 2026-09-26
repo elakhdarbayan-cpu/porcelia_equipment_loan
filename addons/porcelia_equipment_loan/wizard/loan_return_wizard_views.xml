@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_loan_return_wizard_form" model="ir.ui.view">
+        <field name="name">equipment.loan.return.wizard.form</field>
+        <field name="model">equipment.loan.return.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Return Loan">
+                <group>
+                    <field name="date_return"/>
+                    <field name="condition_score"/>
+                    <field name="note"/>
+                </group>
+                <footer>
+                    <button name="action_confirm_return" string="Confirm Return"
+                            type="object" class="btn-primary"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_loan_return_wizard" model="ir.actions.act_window">
+        <field name="name">Return Loan</field>
+        <field name="res_model">equipment.loan.return.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

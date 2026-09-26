@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_equipment_loan_list" model="ir.ui.view">
+        <field name="name">equipment.loan.list</field>
+        <field name="model">equipment.loan</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="is_overdue == True">
+                <field name="name"/>
+                <field name="item_id"/>
+                <field name="borrower_id"/>
+                <field name="date_start"/>
+                <field name="date_due"/>
+                <field name="date_return"/>
+                <field name="state"/>
+                <field name="is_overdue"/>
+                <field name="penalty_amount"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_equipment_loan_form" model="ir.ui.view">
+        <field name="name">equipment.loan.form</field>
+        <field name="model">equipment.loan</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                <button name="%(action_loan_return_wizard)d" string="Return via Wizard"
+        type="action" invisible="state != 'confirmed'" class="btn-primary"/>
+                    <button name="action_confirm" string="Confirm" type="object"
+                            invisible="state != 'draft'" class="btn-primary"/>
+                    <button name="action_return" string="Return" type="object"
+                            invisible="state != 'confirmed'" class="btn-primary"/>
+                    <button name="action_cancel" string="Cancel" type="object"
+                            invisible="state in ('returned', 'cancelled')"/>
+                    <button name="action_draft" string="Set to Draft" type="object"
+                            invisible="state != 'cancelled'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,confirmed,returned"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="item_id"/>
+                            <field name="borrower_id"/>
+                        </group>
+                        <group>
+                            <field name="date_start"/>
+                            <field name="date_due"/>
+                            <field name="date_return"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="days_late"/>
+                            <field name="penalty_amount"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="is_overdue"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="notes"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_equipment_loan_search" model="ir.ui.view">
+        <field name="name">equipment.loan.search</field>
+        <field name="model">equipment.loan</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="item_id"/>
+                <field name="borrower_id"/>
+                <filter name="my_loans" string="My Loans"
+                        domain="[('borrower_id', '=', uid)]"/>
+                <filter name="overdue" string="Overdue"
+                        domain="[('is_overdue', '=', True)]"/>
+                <filter name="active" string="Active"
+                        domain="[('state', '=', 'confirmed')]"/>
+                <group>
+                    <filter name="group_state" string="Status"
+                            context="{'group_by': 'state'}"/>
+                    <filter name="group_item" string="Item"
+                            context="{'group_by': 'item_id'}"/>
+                    <filter name="group_borrower" string="Borrower"
+                            context="{'group_by': 'borrower_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_equipment_loan" model="ir.actions.act_window">
+        <field name="name">Loans</field>
+        <field name="res_model">equipment.loan</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_equipment_loan_search"/>
+    </record>
+
+</odoo>

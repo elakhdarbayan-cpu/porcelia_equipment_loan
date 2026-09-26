@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_equipment_item_list" model="ir.ui.view">
+        <field name="name">equipment.item.list</field>
+        <field name="model">equipment.item</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="category_id"/>
+                <field name="daily_rate"/>
+                <field name="condition_score"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_equipment_item_form" model="ir.ui.view">
+        <field name="name">equipment.item.form</field>
+        <field name="model">equipment.item</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="category_id"/>
+                            <field name="daily_rate"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="condition_score"/>
+                            <field name="state"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="image_1920" widget="image"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_equipment_item" model="ir.actions.act_window">
+        <field name="name">Items</field>
+        <field name="res_model">equipment.item</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

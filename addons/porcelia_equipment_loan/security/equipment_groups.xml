@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Equipment User Group -->
+    <record id="group_equipment_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+    </record>
+
+    <!-- Equipment Manager Group -->
+    <record id="group_equipment_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+        <field name="implied_ids" eval="[(4, ref('group_equipment_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+    <!-- Record Rule: User sees only own loans -->
+    <record id="equipment_loan_user_rule" model="ir.rule">
+        <field name="name">Equipment Loan: User sees own loans</field>
+        <field name="model_id" ref="model_equipment_loan"/>
+        <field name="domain_force">[('borrower_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_equipment_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Record Rule: Manager sees all loans -->
+    <record id="equipment_loan_manager_rule" model="ir.rule">
+        <field name="name">Equipment Loan: Manager sees all</field>
+        <field name="model_id" ref="model_equipment_loan"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_equipment_manager'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+</odoo>
