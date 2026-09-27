@@ -43,14 +43,15 @@ Odoo module for managing equipment loans to employees.
 - **Data**
   - Sequences for Item codes and Loan references
   - Demo data (categories + items)
-  
+
 - QWeb PDF report
+- Scheduled cron for overdue activities
+- Arabic Translation 
 
 ### Not Implemented (deliberately skipped)
 - OWL Condition Gauge widget (Part B1)
 - OWL Equipment Dashboard (Part B2)
 - Systray counter (Bonus)
-- Scheduled cron for overdue activities
 - Unit tests
 
 **Reason:** Focused on delivering a solid, working backend with correct security and business rules within the available time. Prefer a smaller correct submission over incomplete advanced frontend.
