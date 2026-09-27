@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+
+    <!-- ================= Categories ================= -->
+    <record id="category_electronics" model="equipment.category">
+        <field name="name">Electronics</field>
+    </record>
+
+    <record id="category_laptops" model="equipment.category">
+        <field name="name">Laptops</field>
+        <field name="parent_id" ref="category_electronics"/>
+    </record>
+
+    <record id="category_measuring" model="equipment.category">
+        <field name="name">Measuring Devices</field>
+    </record>
+
+    <!-- ================= Items ================= -->
+    <record id="item_laptop_1" model="equipment.item">
+        <field name="name">Dell Latitude 5420</field>
+        <field name="category_id" ref="category_laptops"/>
+        <field name="daily_rate">50</field>
+        <field name="condition_score">90</field>
+    </record>
+
+    <record id="item_laptop_2" model="equipment.item">
+        <field name="name">HP EliteBook 840</field>
+        <field name="category_id" ref="category_laptops"/>
+        <field name="daily_rate">45</field>
+        <field name="condition_score">85</field>
+    </record>
+
+    <record id="item_measure_1" model="equipment.item">
+        <field name="name">Tile Measuring Device</field>
+        <field name="category_id" ref="category_measuring"/>
+        <field name="daily_rate">30</field>
+        <field name="condition_score">95</field>
+    </record>
+
+    <record id="item_case_1" model="equipment.item">
+        <field name="name">Sample Case A</field>
+        <field name="daily_rate">15</field>
+        <field name="condition_score">80</field>
+    </record>
+
+    <record id="item_stand_1" model="equipment.item">
+        <field name="name">Display Stand</field>
+        <field name="daily_rate">20</field>
+        <field name="condition_score">70</field>
+    </record>
+
+</data>
+</odoo>

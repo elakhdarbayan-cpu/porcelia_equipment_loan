@@ -97,27 +97,27 @@ class EquipmentLoan(models.Model):
     # ==================== Buttons ========================
     def action_confirm(self):
         for loan in self:
-         if loan.state != 'draft':
-            raise ValidationError("Only draft loans can be confirmed.")
+            if loan.state != 'draft':
+                raise ValidationError("Only draft loans can be confirmed.")
 
         # ===== No Double Booking =====
-        overlapping = self.env['equipment.loan'].search([
-            ('id', '!=', loan.id),
-            ('item_id', '=', loan.item_id.id),
-            ('state', '=', 'confirmed'),
-            ('date_return', '=', False),
-            ('date_start', '<', loan.date_due),
-            ('date_due', '>', loan.date_start),
-        ], limit=1)
+            overlapping = self.env['equipment.loan'].search([
+                ('id', '!=', loan.id),
+                ('item_id', '=', loan.item_id.id),
+                ('state', '=', 'confirmed'),
+                ('date_return', '=', False),
+                ('date_start', '<', loan.date_due),
+                ('date_due', '>', loan.date_start),
+            ], limit=1)
 
-        if overlapping:
-            raise ValidationError(
-                f"This item is already on loan in a conflicting period.\n"
-                f"Conflicting Loan: {overlapping.name}\n"
-                f"Period: {overlapping.date_start} → {overlapping.date_due}"
-            )
+            if overlapping:
+                raise ValidationError(
+                    f"This item is already on loan in a conflicting period.\n"
+                    f"Conflicting Loan: {overlapping.name}\n"
+                    f"Period: {overlapping.date_start} → {overlapping.date_due}"
+                )
 
-        loan.state = 'confirmed'
+            loan.state = 'confirmed'
         return True
         
 
@@ -147,3 +147,38 @@ class EquipmentLoan(models.Model):
         for loan in self:
             if loan.state not in ('draft', 'cancelled'):
                 raise ValidationError("You can only delete draft or cancelled loans.")
+
+    @api.model
+    def _cron_check_overdue_loans(self):
+        """Mark overdue loans, post message, and schedule activity (idempotent)."""
+        now = fields.Datetime.now()
+        overdue_loans = self.search([
+            ('state', '=', 'confirmed'),
+            ('date_return', '=', False),
+            ('date_due', '<', now),
+            ('is_overdue', '=', False), 
+        ])
+
+        for loan in overdue_loans:
+            loan.is_overdue = True
+
+            loan.message_post(
+                body=f"This loan is overdue. Due date was {loan.date_due}."
+            )
+
+            # Activity واحدة بس لكل قرض
+            existing_activity = self.env['mail.activity'].search([
+                ('res_model', '=', 'equipment.loan'),
+                ('res_id', '=', loan.id),
+                ('activity_type_id', '=', self.env.ref('mail.mail_activity_data_todo').id),
+                ('user_id', '=', loan.borrower_id.id),
+                ('summary', '=', 'Overdue Equipment Loan'),
+            ], limit=1)
+
+            if not existing_activity:
+                loan.activity_schedule(
+                    'mail.mail_activity_data_todo',
+                    user_id=loan.borrower_id.id,
+                    summary='Overdue Equipment Loan',
+                    note=f'Loan {loan.name} is overdue. Please return the item.',
+                )

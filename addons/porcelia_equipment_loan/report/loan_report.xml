@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_report_equipment_loan" model="ir.actions.report">
+        <field name="name">Loan Receipt</field>
+        <field name="model">equipment.loan</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">porcelia_equipment_loan.report_loan_receipt</field>
+        <field name="report_file">porcelia_equipment_loan.report_loan_receipt</field>
+        <field name="binding_model_id" ref="model_equipment_loan"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_loan_receipt">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <div class="page">
+                    <h2>Equipment Loan Receipt</h2>
+                    <p><strong>Reference:</strong> <t t-esc="o.name"/></p>
+                    <p><strong>Item:</strong> <t t-esc="o.item_id.name"/></p>
+                    <p><strong>Borrower:</strong> <t t-esc="o.borrower_id.name"/></p>
+                    <p><strong>Start Date:</strong> <t t-esc="o.date_start"/></p>
+                    <p><strong>Due Date:</strong> <t t-esc="o.date_due"/></p>
+                    <p><strong>Return Date:</strong> <t t-esc="o.date_return"/></p>
+                    <p><strong>Status:</strong> <t t-esc="o.state"/></p>
+                    <p><strong>Days Late:</strong> <t t-esc="o.days_late"/></p>
+                    <p><strong>Penalty:</strong> <t t-esc="o.penalty_amount"/></p>
+                </div>
+            </t>
+        </t>
+    </template>
+
+</odoo>

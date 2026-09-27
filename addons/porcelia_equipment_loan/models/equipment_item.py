@@ -76,3 +76,20 @@ class EquipmentItem(models.Model):
         
         for item in self:
             item.total_days_on_loan = 0
+
+    def action_view_loans(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Loans',
+            'res_model': 'equipment.loan',
+            'view_mode': 'list,form',
+            'domain': [('item_id', '=', self.id)],
+            'context': {'default_item_id': self.id},
+        }
+    _sql_constraints = [
+    (
+        'code_unique',
+        'unique(code)',
+        'The equipment item code must be unique!'
+    ),]
