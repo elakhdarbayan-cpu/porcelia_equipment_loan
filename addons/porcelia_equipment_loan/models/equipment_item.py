@@ -72,11 +72,6 @@ class EquipmentItem(models.Model):
         for item in self:
             item.loan_count = len(item.loan_ids)
 
-    def _compute_total_days_on_loan(self):
-        
-        for item in self:
-            item.total_days_on_loan = 0
-
     def action_view_loans(self):
         self.ensure_one()
         return {
